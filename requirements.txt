@@ -4,11 +4,13 @@ uvicorn==0.24.0
 pydantic==2.5.0
 python-multipart==0.0.6
 
-# Machine Learning - VERSIÓN PRE-COMPILADA
-scikit-learn==1.2.2
-pandas==2.0.3
-numpy==1.24.3
-joblib==1.2.0
-threadpoolctl==3.1.0
+# Machine Learning
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.4.2
+joblib==1.4.2
+threadpoolctl==3.5.0
+
+
 
 
