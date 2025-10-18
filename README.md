@@ -88,10 +88,10 @@ curl -X POST "https://bot-detection-api-ml-model-with-96-e1p3.onrender.com/predi
 
 La API incluye un **formulario interactivo** que permite enviar datos y visualizar la predicción directamente:
 
-![Formulario de predicción](images/uno.png)  
+![Formulario de predicción](images/entrada.png)  
 *Ejemplo de formulario para ingresar un perfil de usuario.*
 
-![Resultado de predicción](images/dos.png)  
+![Resultado de predicción](images/salida.png)  
 *Ejemplo de resultado de predicción mostrando confianza y nivel de riesgo.*
 
 📂 Estructura del Proyecto
@@ -106,8 +106,14 @@ bot-detection-api/
 ├── bot_form.html            # Formulario web de prueba
 ├── requirements.txt         # Dependencias del proyecto
 ├── images/                  # Carpeta para capturas e imágenes
-│   ├── uno.png              # Formulario de prueba
-│   └── dos.png              # Resultado de predicción
+│   ├── entrada.png          # Formulario de prueba
+│   └── salida.png           # Resultado de predicción
+├── data/                    # Carpeta de los datos crudos
+│   ├── bots_vs_users.csv    # Datos en archivo CSV
+├── html/                    # Carpeta del formulario
+│   ├── bot_form.html        # Formulario HTML con CSS
+├── Noteboks/                # Notebook de trabajo
+│   ├── deteccion_bots.ipynb # Notebook      
 └── README.md                # Documentación
 
 ```
