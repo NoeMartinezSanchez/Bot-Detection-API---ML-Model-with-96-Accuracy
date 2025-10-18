@@ -68,3 +68,58 @@ curl -X POST "https://bot-detection-api-ml-model-with-96-e1p3.onrender.com/predi
     "is_blacklisted": 0
 }'
 
+```
+
+### 2. Ejemplo de salida
+
+```bash
+{
+  "prediccion": "👤 HUMANO",
+  "confianza": "94.1%",
+  "probabilidad_bot": "5.9%",
+  "probabilidad_humano": "94.1%",
+  "nivel_riesgo": "BAJO",
+  "recomendacion": "Perfil legítimo"
+}
+
+```
+
+### 3. Formulario Web
+
+La API incluye un **formulario interactivo** que permite enviar datos y visualizar la predicción directamente:
+
+![Formulario de predicción](images/uno.png)  
+*Ejemplo de formulario para ingresar un perfil de usuario.*
+
+![Resultado de predicción](images/dos.png)  
+*Ejemplo de resultado de predicción mostrando confianza y nivel de riesgo.*
+
+📂 Estructura del Proyecto
+
+```bash
+bot-detection-api/
+│
+├── app.py                  # Aplicación FastAPI principal
+├── bot_detection_model.pkl  # Modelo entrenado
+├── scaler.pkl               # Escalador de features
+├── feature_names.pkl        # Lista de features usadas en el modelo
+├── bot_form.html            # Formulario web de prueba
+├── requirements.txt         # Dependencias del proyecto
+├── images/                  # Carpeta para capturas e imágenes
+│   ├── uno.png              # Formulario de prueba
+│   └── dos.png              # Resultado de predicción
+└── README.md                # Documentación
+
+```
+
+💡 Notas y Recomendaciones
+
+Asegúrate de usar CORS si integras la API con aplicaciones externas.
+
+La API está lista para producción y soporta múltiples consultas simultáneas.
+
+Puedes escalar y agregar nuevas features al modelo fácilmente.
+
+
+
+
