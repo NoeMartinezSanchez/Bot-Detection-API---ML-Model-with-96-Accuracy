@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bot Detection API - Formulario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result, .error {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .result {
+            background-color: #e7f3fe;
+            color: #0b5394;
+            border: 1px solid #0b5394;
+        }
+        .error {
+            background-color: #fdecea;
+            color: #a94442;
+            border: 1px solid #a94442;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario de Bot Detection</h1>
+    <form id="botForm">
+        <label for="has_photo">Tiene foto (1/0)</label>
+        <input type="number" id="has_photo" name="has_photo" value="1" min="0" max="1">
+        
+        <label for="is_verified">Verificado (1/0)</label>
+        <input type="number" id="is_verified" name="is_verified" value="0" min="0" max="1">
+        
+        <label for="has_website">Tiene sitio web (1/0)</label>
+        <input type="number" id="has_website" name="has_website" value="0" min="0" max="1">
+        
+        <label for="subscribers_count">Suscriptores</label>
+        <input type="number" id="subscribers_count" name="subscribers_count" value="150" min="0">
+        
+        <label for="city">Ciudad (1/0)</label>
+        <input type="number" id="city" name="city" value="1" min="0" max="1">
+        
+        <label for="can_send_message">Puede enviar mensaje (1/0)</label>
+        <input type="number" id="can_send_message" name="can_send_message" value="1" min="0" max="1">
+        
+        <label for="is_profile_closed">Perfil cerrado (1/0)</label>
+        <input type="number" id="is_profile_closed" name="is_profile_closed" value="0" min="0" max="1">
+        
+        <label for="has_status">Tiene estado (1/0)</label>
+        <input type="number" id="has_status" name="has_status" value="0" min="0" max="1">
+        
+        <label for="is_blacklisted">Lista negra (1/0)</label>
+        <input type="number" id="is_blacklisted" name="is_blacklisted" value="0" min="0" max="1">
+        
+        <button type="submit">Predecir</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        const form = document.getElementById("botForm");
+        const output = document.getElementById("output");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            output.innerHTML = "";
+            
+            const profile = {
+                has_photo: Number(document.getElementById("has_photo").value),
+                is_verified: Number(document.getElementById("is_verified").value),
+                has_website: Number(document.getElementById("has_website").value),
+                subscribers_count: Number(document.getElementById("subscribers_count").value),
+                city: Number(document.getElementById("city").value),
+                can_send_message: Number(document.getElementById("can_send_message").value),
+                is_profile_closed: Number(document.getElementById("is_profile_closed").value),
+                has_status: Number(document.getElementById("has_status").value),
+                is_blacklisted: Number(document.getElementById("is_blacklisted").value)
+            };
+
+            try {
+                const response = await fetch("https://bot-detection-api-ml-model-with-96-e1p3.onrender.com/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(profile)
+                });
+
+                if (!response.ok) {
+                    if (response.status === 0) {
+                        throw new Error("Error de conexión: Verifica tu URL o CORS.");
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`Error ${response.status}: ${errorText}`);
+                    }
+                }
+
+                const data = await response.json();
+                output.innerHTML = `<div class="result">
+                    <strong>Predicción:</strong> ${data.prediccion}<br>
+                    <strong>Confianza:</strong> ${data.confianza}<br>
+                    <strong>Prob Bot:</strong> ${data.probabilidad_bot}<br>
+                    <strong>Prob Humano:</strong> ${data.probabilidad_humano}<br>
+                    <strong>Nivel de riesgo:</strong> ${data.nivel_riesgo}<br>
+                    <strong>Recomendación:</strong> ${data.recomendacion}
+                </div>`;
+            } catch (error) {
+                output.innerHTML = `<div class="error">⚠️ ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
