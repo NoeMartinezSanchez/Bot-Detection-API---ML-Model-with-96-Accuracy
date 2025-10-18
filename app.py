@@ -114,6 +114,9 @@ async def predict_bot(profile: UserProfile):
 @app.get("/predict-example")
 async def predict_example():
     """Ejemplo de predicción con datos de prueba"""
+    if model is None:
+        raise HTTPException(status_code=500, detail="Modelo no cargado")
+
     example_profile = {
         "has_photo": 1.0,
         "is_verified": 0.0,
@@ -125,6 +128,41 @@ async def predict_example():
         "has_status": 0.0,
         "is_blacklisted": 0.0
     }
+
+    try:
+        # Simula una llamada al mismo endpoint sin usar TestClient
+        input_array = []
+        for feature in feature_names:
+            input_array.append(example_profile.get(feature, 0.0))
+        
+        input_data = np.array([input_array])
+        scaled_data = scaler.transform(input_data)
+        prediction = model.predict(scaled_data)
+        probability = model.predict_proba(scaled_data)
+
+        bot_prob = probability[0][1] * 100
+        human_prob = probability[0][0] * 100
+
+        if prediction[0] == 1:
+            result = "🤖 BOT DETECTADO"
+            risk = "ALTO" if bot_prob > 80 else "MEDIO"
+            recommendation = "Investigar perfil"
+        else:
+            result = "👤 HUMANO"
+            risk = "BAJO"
+            recommendation = "Perfil legítimo"
+
+        return {
+            "prediccion": result,
+            "confianza": f"{max(bot_prob, human_prob):.1f}%",
+            "probabilidad_bot": f"{bot_prob:.1f}%",
+            "probabilidad_humano": f"{human_prob:.1f}%",
+            "nivel_riesgo": risk,
+            "recomendacion": recommendation
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error en ejemplo: {str(e)}")
     
     # Llamar al endpoint de predicción
     from fastapi.testclient import TestClient
